@@ -41,14 +41,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     
     <style>
+        /* Base styles */
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: #1A1A1A;
         }
         .font-heading { font-family: 'Playfair Display', serif; }
-        .status-green { color: #38A169; }
-        .status-amber { color: #DD6B20; }
-        .status-red { color: #E53E3E; }
+        
+        /* Status colors from your spec */
+        .status-green { color: #38A169; } /* Green */
+        .status-amber { color: #DD6B20; } /* Amber */
+        .status-red { color: #E53E3E; }   /* Red */
+        
+        /* Helper for progress bar */
+        .progress-bar {
+            background-color: #444;
+            border-radius: 99px;
+            overflow: hidden;
+            height: 10px;
+        }
+        .progress-bar-inner {
+            background-color: #CFA76C;
+            height: 100%;
+            border-radius: 99px;
+            transition: width 0.5s ease;
+        }
     </style>
 </head>
 <body x-data="hrisPortal" class="text-gray-200">
@@ -62,6 +79,7 @@
                 <a href="/management.html" class="font-semibold text-gray-200 hover:text-alaya-gold ml-6">Management</a>
                 <a href="/operations.html" class="font-semibold text-gray-200 hover:text-alaya-gold ml-6">Operations</a>
                 <a href="/hr.html" class="font-semibold text-gray-200 hover:text-alaya-gold ml-6">HR</a>
+                <a href="/leadership.html" class="font-semibold text-gray-200 hover:text-alaya-gold ml-6">Leadership</a>
                 <a href="#" class="font-semibold text-gray-200 hover:text-alaya-gold ml-6">Logout (Admin)</a>
             </div>
         </nav>
@@ -93,6 +111,7 @@
 
         <section class="mb-12">
             <h2 class="font-heading text-3xl text-alaya-gold border-b-2 border-alaya-gold-dark pb-3 mb-6">CSF Dashboard (The Postures)</h2>
+            <p class="text-gray-400 mb-6 -mt-4">The enduring virtues and cultural non-negotiables. Live data pulls from PMS.</p>
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
                 <template x-for="csf in csfData" :key="csf.id">
                     <div class="bg-alaya-bg-light p-6 rounded-lg shadow-lg" 
@@ -108,6 +127,7 @@
 
         <section class="mb-12">
             <h2 class="font-heading text-3xl text-alaya-gold border-b-2 border-alaya-gold-dark pb-3 mb-6">OKR Tracker (The Disciplines) - Q4 2025</h2>
+            <p class="text-gray-400 mb-6 -mt-4">Quarterly measurable commitments across departments.</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <template x-for="okr in okrData" :key="okr.id">
                     <div class="bg-alaya-bg-light p-6 rounded-lg shadow-lg">
@@ -120,8 +140,8 @@
                                         <span class="text-gray-300" x-text="kr.name"></span>
                                         <span class="font-semibold" :class="kr.statusClass" x-text="`${kr.progress} / ${kr.target}`"></span>
                                     </div>
-                                    <div class="w-full bg-alaya-bg rounded-full h-2.5">
-                                        <div class="bg-alaya-gold h-2.5 rounded-full" :style="`width: ${kr.percent}%`"></div>
+                                    <div class="progress-bar">
+                                        <div class="progress-bar-inner" :style="`width: ${kr.percent}%`"></div>
                                     </div>
                                 </li>
                             </template>
@@ -131,9 +151,10 @@
             </div>
         </section>
 
-        <section>
+        <section class="mb-12">
             <h2 class="font-heading text-3xl text-alaya-gold border-b-2 border-alaya-gold-dark pb-3 mb-6">KPI Drilldown (The Practices) - Live</h2>
-            <div class="bg-alaya-bg-light p-6 rounded-lg shadow-lg">
+            <p class="text-gray-400 mb-6 -mt-4">Daily or weekly quantifiable outputs from all systems.</p>
+            <div class="bg-alaya-bg-light rounded-lg shadow-lg overflow-hidden">
                 <table class="w-full text-left">
                     <thead class="border-b-2 border-alaya-gold-dark">
                         <tr>
@@ -146,7 +167,7 @@
                     </thead>
                     <tbody>
                         <template x-for="kpi in kpiData" :key="kpi.id">
-                            <tr class="border-b border-gray-700">
+                            <tr class="border-b border-gray-700 hover:bg-alaya-bg">
                                 <td class="py-4 px-4" x-text="kpi.name"></td>
                                 <td class="py-4 px-4 font-bold" :class="kpi.statusClass" x-text="kpi.value"></td>
                                 <td class="py-4 px-4 text-gray-400" x-text="kpi.source"></td>
@@ -159,6 +180,20 @@
             </div>
         </section>
 
+        <section>
+            <h2 class="font-heading text-3xl text-alaya-gold border-b-2 border-alaya-gold-dark pb-3 mb-6">Consolidated Modules</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-alaya-bg-light p-6 rounded-lg shadow-lg">
+                    <h3 class="font-heading text-xl text-alaya-gold-light mb-1">Training Progress</h3>
+                    <p class="text-gray-400">Codex module completion tracker. (Module in development)</p>
+                </div>
+                <div class="bg-alaya-bg-light p-6 rounded-lg shadow-lg">
+                    <h3 class="font-heading text-xl text-alaya-gold-light mb-1">Compensation & Performance</h3>
+                    <p class="text-gray-400">Auto-linked to bonus eligibility. (Module in development)</p>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <script>
@@ -166,8 +201,9 @@
             Alpine.data('hrisPortal', () => ({
                 
                 // --- 4. CSFs (Critical Success Factors) ---
+                // Mock data based on your Section 4
                 csfData: [
-                    { id: 1, name: 'Service Sanctity', threshold: '≥ 4.6 Rating', currentValue: '4.5', status: 'Red', statusClass: 'status-red' },
+                    { id: 1, name: 'Service Sanctity', threshold: 'Rating ≥ 4.6', currentValue: '4.5', status: 'Red', statusClass: 'status-red' },
                     { id: 2, name: 'Operational Integrity', threshold: '100% Audit', currentValue: '99.8%', status: 'Amber', statusClass: 'status-amber' },
                     { id: 3, name: 'Learning Agility', threshold: '≥ 1 Module/Qtr', currentValue: '1.2', status: 'Green', statusClass: 'status-green' },
                     { id: 4, name: 'Experience Consistency', threshold: '≤ 0.8 Variance', currentValue: '0.75', status: 'Green', statusClass: 'status-green' },
@@ -175,6 +211,7 @@
                 ],
                 
                 // --- 5. OKRs (Quarterly Objectives & Key Results) ---
+                // Mock data based on your Section 5
                 okrData: [
                     {
                         id: 1,
@@ -191,7 +228,7 @@
                         department: 'HR',
                         keyResults: [
                             { name: 'KR1: 90% staff complete training', target: 90, progress: 75, percent: (75/90)*100, statusClass: 'status-amber' },
-                            { name: 'KR2: Training NPS ≥ 8.5', target: 8.5, progress: 8.8, percent: (8.8/8.5)*100, statusClass: 'status-green' }
+                            { name:LET: 'KR2: Training NPS ≥ 8.5', target: 8.5, progress: 8.8, percent: (8.8/8.5)*100, statusClass: 'status-green' }
                         ]
                     },
                     {
@@ -215,12 +252,27 @@
                 ],
                 
                 // --- 6. KPI Integration ---
+                // Mock data based on your Section 6
                 kpiData: [
                     { id: 1, name: 'Guest Rating Index', value: '4.5 / 5.0', source: 'PMS → Feedback', frequency: 'Daily', linkedTo: 'HRIS → Performance', statusClass: 'status-red' },
                     { id: 2, name: 'Task Response Time', value: '6.2 min', source: 'PMS → ServiceLog', frequency: 'Real-time', linkedTo: 'Ops Efficiency', statusClass: 'status-amber' },
                     { id: 3, name: 'Training Completion Rate', value: '75%', source: 'HRIS → Training', frequency: 'Monthly', linkedTo: 'Learning Dashboard', statusClass: 'status-amber' },
-                    { id: 4, name: 'Attendance & Punctuality', value: '98.5%', source: 'HRIS → Biometrics', frequency: 'Daily', linkedTo: 'HR Admin', statusClass: 'status-green' }
+                    { id: 4, name: 'Attendance & Punctuality', value: '98.5%', source: 'HRIS → Biometrics', frequency: 'Daily', linkedTo: 'HR Admin', statusClass: 'status-green' },
+                    { id: 5, name: 'Cross-Dept Collaboration', value: '1 Project', source: 'HRIS → Projects', frequency: 'Quarterly', linkedTo: 'Leadership', statusClass: 'status-green' }
                 ]
+                
+                // --- API Functions (Placeholder) ---
+                // init() {
+                //     this.fetchCSFData();
+                //     this.fetchOKRData();
+                //     this.fetchKPIData();
+                // },
+                // async fetchCSFData() {
+                //     // const response = await fetch('/api/hris/csf');
+                //     // this.csfData = await response.json();
+                //     console.log('Fetching CSF data...');
+                // },
+                // ... etc.
             }));
         });
     </script>
