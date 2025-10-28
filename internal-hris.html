@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alo Chaya HRIS-PMS Portal</title>
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'alaya-gold': {
+                            DEFAULT: '#CFA76C', // Muted Gold (Accent)
+                            dark: '#8B7342',    // Dark Gold (Headers)
+                            light: '#F5E5C9'   // Light Cream (Text)
+                        },
+                        'alaya-blue': {
+                            DEFAULT: '#0A3D62'  // Deep Blue (River/Sky)
+                        },
+                        'alaya-bg': {
+                            DEFAULT: '#1A1A1A', // Deep Charcoal
+                            light: '#2D2D2D'   // Card Background
+                        }
+                    },
+                    fontFamily: {
+                        heading: ['Playfair Display', 'serif'],
+                        body: ['Inter', 'sans-serif']
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #1A1A1A;
+        }
+        .font-heading { font-family: 'Playfair Display', serif; }
+        .status-green { color: #38A169; }
+        .status-amber { color: #DD6B20; }
+        .status-red { color: #E53E3E; }
+    </style>
+</head>
+<body x-data="hrisPortal" class="text-gray-200">
+
+    <header class="bg-alaya-blue sticky top-0 z-50 shadow-lg">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-heading font-bold text-white">
+                Alo Chaya <span class="text-alaya-gold">HRIS–PMS Portal</span>
+            </h1>
+            <div>
+                <a href="/management.html" class="font-semibold text-gray-200 hover:text-alaya-gold ml-6">Management</a>
+                <a href="/operations.html" class="font-semibold text-gray-200 hover:text-alaya-gold ml-6">Operations</a>
+                <a href="/hr.html" class="font-semibold text-gray-200 hover:text-alaya-gold ml-6">HR</a>
+                <a href="#" class="font-semibold text-gray-200 hover:text-alaya-gold ml-6">Logout (Admin)</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+
+        <section class="mb-12 p-6 bg-alaya-bg-light rounded-lg shadow-md">
+            <h2 class="font-heading text-3xl text-alaya-gold border-b-2 border-alaya-gold-dark pb-3 mb-6">Core Philosophy: The Ethical–Operational Loop</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
+                <div class="bg-alaya-bg p-4 rounded-lg">
+                    <h3 class="text-xl font-heading text-alaya-gold-light">Mirror (Why)</h3>
+                    <p class="text-sm text-gray-400">Vision & Purpose</p>
+                </div>
+                <div class="bg-alaya-bg p-4 rounded-lg">
+                    <h3 class="text-xl font-heading text-alaya-gold-light">Posture (Who)</h3>
+                    <p class="text-sm text-gray-400">Critical Success Factors (CSF)</p>
+                </div>
+                <div class="bg-alaya-bg p-4 rounded-lg">
+                    <h3 class="text-xl font-heading text-alaya-gold-light">Discipline (How)</h3>
+                    <p class="text-sm text-gray-400">Objectives & Key Results (OKR)</p>
+                </div>
+                <div class="bg-alaya-bg p-4 rounded-lg">
+                    <h3 class="text-xl font-heading text-alaya-gold-light">Practice (What)</h3>
+                    <p class="text-sm text-gray-400">Key Performance Indicators (KPI)</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="font-heading text-3xl text-alaya-gold border-b-2 border-alaya-gold-dark pb-3 mb-6">CSF Dashboard (The Postures)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <template x-for="csf in csfData" :key="csf.id">
+                    <div class="bg-alaya-bg-light p-6 rounded-lg shadow-lg" 
+                         :class="{ 'border-t-4 border-red-500': csf.status === 'Red', 'border-t-4 border-yellow-500': csf.status === 'Amber', 'border-t-4 border-green-500': csf.status === 'Green' }">
+                        <h3 class="font-heading text-xl text-alaya-gold-light" x-text="csf.name"></h3>
+                        <p class="text-gray-400 text-sm mb-4" x-text="csf.threshold"></p>
+                        <div class="text-3xl font-bold" :class="csf.statusClass" x-text="csf.currentValue"></div>
+                        <div class="text-sm font-semibold" :class="csf.statusClass" x-text="csf.status"></div>
+                    </div>
+                </template>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="font-heading text-3xl text-alaya-gold border-b-2 border-alaya-gold-dark pb-3 mb-6">OKR Tracker (The Disciplines) - Q4 2025</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <template x-for="okr in okrData" :key="okr.id">
+                    <div class="bg-alaya-bg-light p-6 rounded-lg shadow-lg">
+                        <h3 class="font-heading text-xl text-alaya-gold-light mb-1" x-text="okr.objective"></h3>
+                        <p class="text-sm text-gray-400 mb-4">(Department: <span x-text="okr.department"></span>)</p>
+                        <ul>
+                            <template x-for="kr in okr.keyResults" :key="kr.name">
+                                <li class="mb-3">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-gray-300" x-text="kr.name"></span>
+                                        <span class="font-semibold" :class="kr.statusClass" x-text="`${kr.progress} / ${kr.target}`"></span>
+                                    </div>
+                                    <div class="w-full bg-alaya-bg rounded-full h-2.5">
+                                        <div class="bg-alaya-gold h-2.5 rounded-full" :style="`width: ${kr.percent}%`"></div>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="font-heading text-3xl text-alaya-gold border-b-2 border-alaya-gold-dark pb-3 mb-6">KPI Drilldown (The Practices) - Live</h2>
+            <div class="bg-alaya-bg-light p-6 rounded-lg shadow-lg">
+                <table class="w-full text-left">
+                    <thead class="border-b-2 border-alaya-gold-dark">
+                        <tr>
+                            <th class="py-3 px-4 font-semibold text-alaya-gold-light">KPI</th>
+                            <th class="py-3 px-4 font-semibold text-alaya-gold-light">Current Value</th>
+                            <th class="py-3 px-4 font-semibold text-alaya-gold-light">Source</th>
+                            <th class="py-3 px-4 font-semibold text-alaya-gold-light">Frequency</th>
+                            <th class="py-3 px-4 font-semibold text-alaya-gold-light">Linked To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="kpi in kpiData" :key="kpi.id">
+                            <tr class="border-b border-gray-700">
+                                <td class="py-4 px-4" x-text="kpi.name"></td>
+                                <td class="py-4 px-4 font-bold" :class="kpi.statusClass" x-text="kpi.value"></td>
+                                <td class="py-4 px-4 text-gray-400" x-text="kpi.source"></td>
+                                <td class="py-4 px-4 text-gray-400" x-text="kpi.frequency"></td>
+                                <td class="py-4 px-4 text-gray-400" x-text="kpi.linkedTo"></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('hrisPortal', () => ({
+                
+                // --- 4. CSFs (Critical Success Factors) ---
+                csfData: [
+                    { id: 1, name: 'Service Sanctity', threshold: '≥ 4.6 Rating', currentValue: '4.5', status: 'Red', statusClass: 'status-red' },
+                    { id: 2, name: 'Operational Integrity', threshold: '100% Audit', currentValue: '99.8%', status: 'Amber', statusClass: 'status-amber' },
+                    { id: 3, name: 'Learning Agility', threshold: '≥ 1 Module/Qtr', currentValue: '1.2', status: 'Green', statusClass: 'status-green' },
+                    { id: 4, name: 'Experience Consistency', threshold: '≤ 0.8 Variance', currentValue: '0.75', status: 'Green', statusClass: 'status-green' },
+                    { id: 5, name: 'Faithful Stewardship', threshold: '100% Audit', currentValue: '100%', status: 'Green', statusClass: 'status-green' }
+                ],
+                
+                // --- 5. OKRs (Quarterly Objectives & Key Results) ---
+                okrData: [
+                    {
+                        id: 1,
+                        objective: 'O1: Enhance Guest–Staff Harmony',
+                        department: 'Front Office / HR',
+                        keyResults: [
+                            { name: 'KR1: Avg. rating ≥ 4.6/5', target: 4.6, progress: 4.5, percent: (4.5/4.6)*100, statusClass: 'status-red' },
+                            { name: 'KR2: ≤ 3 negative reviews / 100', target: 3, progress: 2, percent: (1-(2/3))*100, statusClass: 'status-green' } // Note: Inverted goal
+                        ]
+                    },
+                    {
+                        id: 2,
+                        objective: 'O2: Build Learning Culture',
+                        department: 'HR',
+                        keyResults: [
+                            { name: 'KR1: 90% staff complete training', target: 90, progress: 75, percent: (75/90)*100, statusClass: 'status-amber' },
+                            { name: 'KR2: Training NPS ≥ 8.5', target: 8.5, progress: 8.8, percent: (8.8/8.5)*100, statusClass: 'status-green' }
+                        ]
+                    },
+                    {
+                        id: 3,
+                        objective: 'O3: Raise Ethical Profitability',
+                        department: 'Finance / Ops',
+                        keyResults: [
+                            { name: 'KR1: +12% ADR uplift', target: 12, progress: 14, percent: (14/12)*100, statusClass: 'status-green' },
+                            { name: 'KR2: 100% transparent audits', target: 100, progress: 100, percent: 100, statusClass: 'status-green' }
+                        ]
+                    },
+                    {
+                        id: 4,
+                        objective: 'O4: Strengthen Internal Unity',
+                        department: 'Leadership',
+                        keyResults: [
+                            { name: 'KR1: 1 cross-dept project/quarter', target: 1, progress: 1, percent: 100, statusClass: 'status-green' },
+                            { name: 'KR2: engagement ≥ 80%', target: 80, progress: 78, percent: (78/80)*100, statusClass: 'status-amber' }
+                        ]
+                    }
+                ],
+                
+                // --- 6. KPI Integration ---
+                kpiData: [
+                    { id: 1, name: 'Guest Rating Index', value: '4.5 / 5.0', source: 'PMS → Feedback', frequency: 'Daily', linkedTo: 'HRIS → Performance', statusClass: 'status-red' },
+                    { id: 2, name: 'Task Response Time', value: '6.2 min', source: 'PMS → ServiceLog', frequency: 'Real-time', linkedTo: 'Ops Efficiency', statusClass: 'status-amber' },
+                    { id: 3, name: 'Training Completion Rate', value: '75%', source: 'HRIS → Training', frequency: 'Monthly', linkedTo: 'Learning Dashboard', statusClass: 'status-amber' },
+                    { id: 4, name: 'Attendance & Punctuality', value: '98.5%', source: 'HRIS → Biometrics', frequency: 'Daily', linkedTo: 'HR Admin', statusClass: 'status-green' }
+                ]
+            }));
+        });
+    </script>
+</body>
+</html>
